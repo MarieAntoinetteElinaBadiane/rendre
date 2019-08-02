@@ -196,7 +196,14 @@ class AController extends AbstractController
 
 
     $compte = new Compte();
-    $compte->setNumerocompte($values->numerocompte);
+    $jour = date('d');
+    $mois = date('m');
+    $annee = date('Y');
+    $heure = date('H');
+    $minute = date('i');
+    $seconde= date('s');
+    $numerocompte=$jour.$mois.$annee.$heure.$minute.$seconde;
+    $compte->setNumerocompte($numerocompte);
     $compte->setSolde($values->solde);
 
     $partenaire= $this->getDoctrine()->getRepository(Partenaire::class)->find($values->comp);
@@ -231,7 +238,7 @@ class AController extends AbstractController
 
             $compte = new Compte();
                    //incrementant du solde du compte
-    //       
+       
             $compte = $this->getDoctrine()->getRepository(Compte::class)->findOneBy(["numerocompte"=>$values->numerocompte]);
             $compte->setSolde($compte->getSolde()+$values->montant);
             
