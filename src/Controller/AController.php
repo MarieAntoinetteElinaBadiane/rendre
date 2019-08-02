@@ -23,8 +23,8 @@ class AController extends AbstractController
      */
     public function index(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
     {
-        $sms='message';
-        $status='status';
+        $sms='messag';
+        $status='statu';
 
         $values = json_decode($request->getContent());
         if(isset($values->username,$values->password)) {
@@ -56,6 +56,7 @@ class AController extends AbstractController
                 if ($values->roles==4) {
                     $user->setRoles(['CAISSIER']);
                 }
+
             $user->setPart($partenaire);
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -65,13 +66,13 @@ class AController extends AbstractController
 
             $data = [
                 $status => 201,
-                $sms => 'Les propriétés du user ont été bien ajouté'
+                $sms => 'Les propriétés ont été bien ajouté'
             ];
             return new JsonResponse($data, 201);
         }
         $data = [
             $status => 500,
-            $sms => 'Vous devez renseigner les clés username et password'
+            $sms => 'Renseignez les clés username et password'
         ];
         return new JsonResponse($data, 500);
     }
@@ -82,8 +83,8 @@ class AController extends AbstractController
     public function user(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
     
     {
-        $sms='message';
-        $status='status';
+        $sms='mess';
+        $status='statu';
 
         $values = json_decode($request->getContent());
         if(isset($values->username,$values->password)) {
@@ -132,8 +133,8 @@ class AController extends AbstractController
     public function adduser(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
     
     {
-        $sms='message';
-        $status='status';
+        $sms='messae';
+        $status='staus';
 
         $values = json_decode($request->getContent());
         if(isset($values->username,$values->password)) {
@@ -213,7 +214,7 @@ class AController extends AbstractController
         
         $data = [
             $status => 500,
-            $sms => 'Vous devez renseigner les clés'
+            $sms => 'Renseignez les clés'
         ];
         return new JsonResponse($data, 500);
     
@@ -241,7 +242,7 @@ class AController extends AbstractController
             $depot->setMontant($values->montant);
 
             $user= $this->getDoctrine()->getRepository(User::class)->find($values->compt);
-            $depot->setCompt($user);//$par=$caissier->find($id);
+            $depot->setCompt($user);
             $compte= $this->getDoctrine()->getRepository(Compte::class)->find($values->dep);
             $depot->setDep($compte);
     
