@@ -221,42 +221,19 @@ class AController extends AbstractController
     /**
      * @Route("/ajoutargent", name="ajoutargent", methods={"POST"})
      */
-    public function argent(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
+    public function argent(Request $request, EntityManagerInterface $entityManager)
     {
         $sms='message';
         $status='status';
 
-                $values = json_decode($request->getContent());
-            //     if(isset($values->username,$values->password)) 
-            
-
-            // $user = new User();
-            // $user->setNom($values->nom);
-            // $user->setPrenom($values->prenom);
-            // $user->setStatut($values->statut);
-            // $user->setUsername($values->username);
-            // $user->setPassword($passwordEncoder->encodePassword($user, $values->password));
-            //     if ($values->roles==1) {
-            //         $user->setRoles(['SUPER_ADMIN']);
-            //     }
-            //     if ($values->roles==2) {
-            //         $user->setRoles(['ADMIN']);
-            //     }
-            //     if ($values->roles==3) {
-            //         $user->setRoles(['USER']);
-            //     }
-            //     if ($values->roles==4) {
-            //         $user->setRoles(['CAISSIER']);
-            //     }
-
+            $values = json_decode($request->getContent());
 
             $compte = new Compte();
                    //incrementant du solde du compte
     //       
             $compte = $this->getDoctrine()->getRepository(Compte::class)->findOneBy(["numerocompte"=>$values->numerocompte]);
             $compte->setSolde($compte->getSolde()+$values->montant);
-            // $partenaire= $this->getDoctrine()->getRepository(Partenaire::class)->find($values->comp);
-            // $compte->setComp($partenaire);
+            
             
 
             $depot = new Depot();
@@ -264,7 +241,7 @@ class AController extends AbstractController
             $depot->setMontant($values->montant);
 
             $user= $this->getDoctrine()->getRepository(User::class)->find($values->compt);
-            $depot->setCompt($user);
+            $depot->setCompt($user);//$par=$caissier->find($id);
             $compte= $this->getDoctrine()->getRepository(Compte::class)->find($values->dep);
             $depot->setDep($compte);
     
