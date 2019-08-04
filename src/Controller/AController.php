@@ -40,29 +40,32 @@ class AController extends AbstractController
             $user = new User();
             $user->setNom($values->nom);
             $user->setPrenom($values->prenom);
-            $user->setStatut($values->statut);
+            $user->setStatut('actif');
             $user->setUsername($values->username);
             $user->setPassword($passwordEncoder->encodePassword($user, $values->password));
-                if ($values->roles==1) {
-                    $user->setRoles(['SUPER_ADMIN']);
-                }
-                if ($values->roles==2) {
-                    $user->setRoles(['ADMIN']);
-                }
-                if ($values->roles==3) {
-                    $user->setRoles(['USER']);
-                }
-
-                if ($values->roles==4) {
-                    $user->setRoles(['CAISSIER']);
-                }
+                
+            $user->setRoles(['ROLE_ADMIN']);
 
             $user->setPart($partenaire);
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($partenaire);
-            $entityManager->persist($user);
-            $entityManager->flush();
+            $compte = new Compte();
+            $jour = date('d');
+            $mois = date('m');
+            $annee = date('Y');
+            $heure = date('H');
+            $minute = date('i');
+            $seconde= date('s');
+            $numerocompte=$jour.$mois.$annee.$heure.$minute.$seconde;
+            $compte->setNumerocompte($numerocompte);
+            $compte->setSolde(0);
+           
+            $compte->setComp($partenaire);
+        
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($compte);
+                    $entityManager->persist($partenaire);
+                    $entityManager->persist($user);
+                    $entityManager->flush();
 
             $data = [
                 $status => 201,
@@ -181,51 +184,51 @@ class AController extends AbstractController
      * @Route("/depotargent", name="depotargent", methods={"POST"})
      */
 
-     public function depotargent(Request $request, EntityManagerInterface $entityManager)
-     {
+    //  public function depotargent(Request $request, EntityManagerInterface $entityManager)
+    //  {
     
-        $sms='message';
-        $status='status';
+    //     $sms='message';
+    //     $status='status';
 
-    $values = json_decode($request->getContent());
-    $partenaire = new Partenaire();
-    $partenaire->setNinea($values->ninea);
-    $partenaire->setAdresse($values->adresse);
-    $partenaire->setRaisonSociale($values->raison_sociale);
-    $partenaire->setPhoto($values->photo);
+    // $values = json_decode($request->getContent());
+    // $partenaire = new Partenaire();
+    // $partenaire->setNinea($values->ninea);
+    // $partenaire->setAdresse($values->adresse);
+    // $partenaire->setRaisonSociale($values->raison_sociale);
+    // $partenaire->setPhoto($values->photo);
 
 
-    $compte = new Compte();
-    $jour = date('d');
-    $mois = date('m');
-    $annee = date('Y');
-    $heure = date('H');
-    $minute = date('i');
-    $seconde= date('s');
-    $numerocompte=$jour.$mois.$annee.$heure.$minute.$seconde;
-    $compte->setNumerocompte($numerocompte);
-    $compte->setSolde($values->solde);
+    // $compte = new Compte();
+    // $jour = date('d');
+    // $mois = date('m');
+    // $annee = date('Y');
+    // $heure = date('H');
+    // $minute = date('i');
+    // $seconde= date('s');
+    // $numerocompte=$jour.$mois.$annee.$heure.$minute.$seconde;
+    // $compte->setNumerocompte($numerocompte);
+    // $compte->setSolde($values->solde);
 
-    $partenaire= $this->getDoctrine()->getRepository(Partenaire::class)->find($values->comp);
-    $compte->setComp($partenaire);
+    // $partenaire= $this->getDoctrine()->getRepository(Partenaire::class)->find($values->comp);
+    // $compte->setComp($partenaire);
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($compte);
-            $entityManager->flush();
+    //         $entityManager = $this->getDoctrine()->getManager();
+    //         $entityManager->persist($compte);
+    //         $entityManager->flush();
 
-            $data = [
-                $status => 201,
-                $sms => 'Les propriétés de votre compte ont été bien ajouté'
-            ];
-            return new JsonResponse($data, 201);
+    //         $data = [
+    //             $status => 201,
+    //             $sms => 'Les propriétés de votre compte ont été bien ajouté'
+    //         ];
+    //         return new JsonResponse($data, 201);
         
-        $data = [
-            $status => 500,
-            $sms => 'Renseignez les clés'
-        ];
-        return new JsonResponse($data, 500);
+    //     $data = [
+    //         $status => 500,
+    //         $sms => 'Renseignez les clés'
+    //     ];
+    //     return new JsonResponse($data, 500);
     
-    }
+    // }
     /**
      * @Route("/ajoutargent", name="ajoutargent", methods={"POST"})
      */
@@ -236,14 +239,11 @@ class AController extends AbstractController
 
             $values = json_decode($request->getContent());
 
-            $compte = new Compte();
+            
                    //incrementant du solde du compte
-       
+            $compte = new Compte();
             $compte = $this->getDoctrine()->getRepository(Compte::class)->findOneBy(["numerocompte"=>$values->numerocompte]);
             $compte->setSolde($compte->getSolde()+$values->montant);
-            
-            
-
             $depot = new Depot();
             $depot->setDate(new \DateTime);
             $depot->setMontant($values->montant);

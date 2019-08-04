@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 use App\Entity\User;
-use App\Entity\Partenaire;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
